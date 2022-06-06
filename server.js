@@ -5,11 +5,12 @@ const cors = require('cors');
 const pizzasService = require('./services/pizzas.service');
 const ordersService =require('./services/orders.service');
 const tagsService = require('./services/tags.service');
-const connectionString = 'INSERT_CONNECTION_STRING_HERE';
+const connectionString = 'mongodb+srv://KireMitrov:SourceMX@sourcemx.57yqm.mongodb.net/?retryWrites=true&w=majority';
 let client = null;
 let pizzasCollection = null;
+require('dotenv').config();
 
-MongoClient.connect(connectionString)
+MongoClient.connect(process.env.MONGO_HOST)
     .then((_client) => {
         client = _client;
         pizzasCollection = _client.db('pizza-app').collection('pizzas');
@@ -39,7 +40,7 @@ function bootstrap(){
     app.put('/orders/:id', ordersService.updateOne);
 
     //tags service
-    app.post('/tags', tagsService.updateOne);
+    // app.post('/tags', tagsService.updateOne);
     app.get('/tags', tagsService.getAll)
 
     // not REST-full 
@@ -63,7 +64,7 @@ function bootstrap(){
     });
     app.use(express.static('public'));
     //app.get(...)
-    app.listen(8080, function() {
+    app.listen(process.env.PORT, function() {
         console.log('listening on port 8080...');
     });
 }
